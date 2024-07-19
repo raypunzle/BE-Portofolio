@@ -127,6 +127,7 @@ app.put('/api/skills/:id', upload.single('image'), (req, res) => {
 app.put('/api/projects/:id', upload.single('image'), (req, res) => {
   const { id } = req.params;
   const { title, description } = req.body;
+
   const imagePath = req.file ? req.file.path : null;
 
   let query = 'UPDATE projects SET title = ?, description = ?';
@@ -148,6 +149,19 @@ app.put('/api/projects/:id', upload.single('image'), (req, res) => {
     res.json({ message: 'Project updated successfully' });
   });
 });
+
+app.delete('/api/projects/:id', (req, res) => {
+  const { id } = req.params;
+  const query = 'DELETE FROM projects WHERE id = ?';
+  db.query(query, id, (err, result) => {
+    if (err) {
+      res.status(500).json({ error: 'Error deleting project' });
+      return;
+    }
+
+    res.json({message: "Project deleted successfully"})
+  })
+})
 
 app.delete('/api/skills/:id', (req, res) => {
   const { id } = req.params;
